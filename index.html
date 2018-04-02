@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Colonizers</title>
+  </head>
+  <body>
+    <h1>Colonizers</h1>
+
+    <form id="create-form">
+      <input type="submit" value="Create Game"/>
+    </form>
+
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+    <script>
+      $('#create-form').submit(function() {
+        $.ajax({
+          url: "/create",
+          type: "POST",
+          success: function(data, status, resp) {
+            window.location = resp.getResponseHeader('Location');
+          }
+        });
+        return false;
+    });
+    </script>
+
+  </body>
+</html>
