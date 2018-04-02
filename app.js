@@ -13,25 +13,25 @@ var games = {};
 
 function createStarterBoard() {
   return [
-    { "position": 0, "resource": "wheat", "number": 9 },
-    { "position": 1, "resource": "wheat", "number": 12 },
-    { "position": 2, "resource": "ore", "number": 10 },
-    { "position": 3, "resource": "wool", "number": 2 },
-    { "position": 4, "resource": "wood", "number": 9 },
-    { "position": 5, "resource": "clay", "number": 10 },
-    { "position": 6, "resource": "ore", "number": 8 },
-    { "position": 7, "resource": "wool", "number": 5 },
-    { "position": 8, "resource": "wool", "number": 11 },
-    { "position": 9, "resource": "wheat", "number": 6 },
-    { "position": 10, "resource": "clay", "number": 5 },
-    { "position": 11, "resource": "wood", "number": 8 },
-    { "position": 12, "resource": "wood", "number": 11 },
-    { "position": 13, "resource": "clay", "number": 6 },
-    { "position": 14, "resource": "wool", "number": 4 },
-    { "position": 15, "resource": "wood", "number": 3 },
-    { "position": 16, "resource": "wheat", "number": 4 },
-    { "position": 17, "resource": "ore", "number": 3 },
-    { "position": 18, "resource": "desert", "number": NaN }
+    { "position": 0, "resource": "ore", "number": 9 },
+    { "position": 1, "resource": "wool", "number": 12 },
+    { "position": 2, "resource": "forest", "number": 10 },
+    { "position": 3, "resource": "wheat", "number": 2 },
+    { "position": 4, "resource": "clay", "number": 9 },
+    { "position": 5, "resource": "wool", "number": 10 },
+    { "position": 6, "resource": "clay", "number": 8 },
+    { "position": 7, "resource": "wheat", "number": 5 },
+    { "position": 8, "resource": "forest", "number": 11 },
+    { "position": 9, "resource": "desert", "number": 6 },
+    { "position": 10, "resource": "forest", "number": 5 },
+    { "position": 11, "resource": "ore", "number": 8 },
+    { "position": 12, "resource": "forest", "number": 11 },
+    { "position": 13, "resource": "ore", "number": 6 },
+    { "position": 14, "resource": "wheat", "number": 4 },
+    { "position": 15, "resource": "wool", "number": 3 },
+    { "position": 16, "resource": "clay", "number": 4 },
+    { "position": 17, "resource": "wheat", "number": 3 },
+    { "position": 18, "resource": "wool", "number": NaN }
   ];
 }
 
