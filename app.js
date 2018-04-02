@@ -13,25 +13,26 @@ var games = {};
 
 function createStarterBoard() {
   return [
-    { "position": 0, "resource": "ore", "number": 10 },
-    { "position": 1, "resource": "wool", "number": 2 },
-    { "position": 2, "resource": "wood", "number": 9 },
-    { "position": 3, "resource": "wheat", "number": 12 },
-    { "position": 4, "resource": "clay", "number": 6 },
-    { "position": 5, "resource": "wool", "number": 4 },
-    { "position": 6, "resource": "clay", "number": 10 },
-    { "position": 7, "resource": "wheat", "number": 9 },
-    { "position": 8, "resource": "wood", "number": 11 },
-    { "position": 9, "resource": "desert", "number": null },
-    { "position": 10, "resource": "wood", "number": 3 },
-    { "position": 11, "resource": "ore", "number": 8 },
-    { "position": 12, "resource": "wood", "number": 8 },
-    { "position": 13, "resource": "ore", "number": 3 },
-    { "position": 14, "resource": "wheat", "number": 4 },
-    { "position": 15, "resource": "wool", "number": 5 },
-    { "position": 16, "resource": "clay", "number": 5 },
-    { "position": 17, "resource": "wheat", "number": 6 },
-    { "position": 18, "resource": "wool", "number": 11 }
+
+    { "position": 0, "resource": "ore", "number": 10, "indexes": [[3,3], [4,3], [4,2], [3,2], [2,2], [2,3]] },
+    { "position": 1, "resource": "wool", "number": 2, "indexes": [[5,3], [6,3], [6,2], [5,2], [4,2], [4,3]] },
+    { "position": 2, "resource": "wood", "number": 9, "indexes": [[7,3], [8,3], [8,2], [7,2], [6,2], [6,3]] },
+    { "position": 3, "resource": "wheat", "number": 12, "indexes": [[2,2], [3,2], [3,1], [2,1], [1,1], [1,2]] },
+    { "position": 4, "resource": "clay", "number": 6, "indexes": [[4,2], [5,2], [5,1], [4,1], [3,1], [3,2]] },
+    { "position": 5, "resource": "wool", "number": 4, "indexes": [[6,2], [7,2], [7,1], [6,1], [5,1], [5,2]] },
+    { "position": 6, "resource": "clay", "number": 10, "indexes": [[8,2], [9.2], [9.1], [8,1], [7,1], [7,2]] },
+    { "position": 7, "resource": "wheat", "number": 9, "indexes": [[1,1], [2,1], [2,0], [1,0], [0,0], [0,1]] },
+    { "position": 8, "resource": "wood", "number": 11, "indexes": [[3,1], [4,1], [4,0], [3,0], [2,0], [2,1]] },
+    { "position": 9, "resource": "desert", "number": null, "indexes": [[5,1], [6,1], [6,0], [5,0], [4,0], [4,1]] },
+    { "position": 10, "resource": "wood", "number": 3, "indexes": [[7,1], [8,1], [8,0], [7,0], [6,0], [6,1]] },
+    { "position": 11, "resource": "ore", "number": 8, "indexes": [[9,1], [10,1], [10,0], [9.0], [8.0], [8,1]] },
+    { "position": 12, "resource": "wood", "number": 8, "indexes": [[2,0], [3,0], [3,-1], [2,-1], [1,-1], [1,0]] },
+    { "position": 13, "resource": "ore", "number": 3, "indexes": [[4,0], [5,0], [5,-1], [4,-1], [3,-1], [3,0]] },
+    { "position": 14, "resource": "wheat", "number": 4, "indexes": [[6,0], [7,0], [7,-1], [6,-1], [5,-1], [5,0]] },
+    { "position": 15, "resource": "wool", "number": 5, "indexes": [[8,0], [9,0], [9,-1], [8,-1], [7,-1], [7,0]] },
+    { "position": 16, "resource": "clay", "number": 5, "indexes": [[3,-1], [4,-1], [4,-2], [3,-2], [2,-2], [2,-1]] },
+    { "position": 17, "resource": "wheat", "number": 6, "indexes": [[5,-1], [6,-1], [6,-2], [5,-2], [4,-2], [4,-1]] },
+    { "position": 18, "resource": "wool", "number": 11, "indexes": [[7,-1], [8,-1], [8,-2], [7,-2], [6,-2], [6,-1]] }
   ];
 }
 
