@@ -35,6 +35,17 @@ function createStarterBoard() {
   ];
 }
 
+function rollDice() {
+  var die1 = Math.floor(Math.random() * (6)) + 1;
+  var die2 = Math.floor(Math.random() * (6)) + 1;
+  return die1 + die2
+}
+
+function startTurn(game) {
+  var roll = rollDice();
+
+}
+
 function validRoad(start, end, game) {
 
   return true;
