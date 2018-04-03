@@ -53,8 +53,9 @@ function rollDice() {
   return die1 + die2
 };
 
-function startTurn(game) {
+function doDiceRoll(game) {
   var roll = rollDice();
+  var gamePlayers = players[game.gameId];
   console.log(roll + " was rolled");
   if(roll === 7) {
     console.log("ROBBER!")
@@ -65,8 +66,27 @@ function startTurn(game) {
         console.log(tiles[i]);
         for (var j = 0; j < 6; j++) {
             var town = getTown(tiles[i].indexes[j], game);
-            if(town != null) {
+            if(town) {
                 console.log(town.color + " gets " + tiles[i].resource);
+                var player = findPlayer(gamePlayers, town.color);
+                var num = town.city ? 2 : 1;
+                switch (tiles[i].resource) {
+                    case "wood":
+                        player.wood += num;
+                        break;
+                    case "wool":
+                        player.wool += num;
+                        break;
+                    case "wheat":
+                        player.wheat += num;
+                        break;
+                    case "clay":
+                        player.clay += num;
+                        break;
+                    case "ore":
+                        player.ore += num;
+                        break;
+                }
             }
         }
     }
@@ -118,9 +138,9 @@ app.post('/create', function(req, res) {
   games[gameId] = {
     gameId: gameId,
     board: createStarterBoard(),
-    towns: [{position: [3,2], color: "black"}, {position: [8,2], color: "orange"}, {position: [5,1], color: "red"},
-      {position: [8,1], color: "orange"}, {position: [6,0], color: "red"}, {position: [3,-1], color: "blue"},
-      {position: [7,-1], color: "black"}, {position: [6,-2], color: "blue"}],
+    towns: [{position: [3,2], color: "black", city: false}, {position: [8,2], color: "orange", city: false}, {position: [5,1], color: "red", city: false},
+      {position: [8,1], color: "orange", city: false}, {position: [6,0], color: "red", city: false}, {position: [3,-1], color: "blue", city: false},
+      {position: [7,-1], color: "black", city: false}, {position: [6,-2], color: "blue", city: false}],
     roads: [{start: [4,2], end: [3,2], color: "black"}, {start: [7,2], end: [8,2], color: "orange"}, {start: [5,1], end: [5,2], color: "red"},
       {start: [6,0], end: [6,1], color: "red"}, {start: [8.0], end: [8,1], color: "orange"}, {start: [3,-1], end: [3,0], color: "blue"},
       {start: [6,-1], end: [7,-1], color: "black"}, {start: [5,-2], end: [6,-2], color: "blue"}],
@@ -159,6 +179,7 @@ io.on('connection', function(socket) {
 
   socket.on('roll', function() {
     console.log('roll');
+    doDiceRoll()
     // TODO update gamestate
     io.sockets.emite('game_state', games[gameId]);
   });
