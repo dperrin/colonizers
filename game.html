@@ -5,13 +5,52 @@
     <style type="text/css">
       #game {
         border: 1px solid black;
+        float: left;
+      }
+
+      #sidebar {
+        margin-left: 25px;
+        float: left;
+      }
+
+      #turn-actions button {
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+      }
+
+      #end-turn-button {
+        display: none;
+        float: right;
+      }
+
+      .resources {
+        margin: 0;
+        padding: 0;
+        margin-top: 10px;
+      }
+
+      .resources li {
+        display: inline;
+        margin: 0 10px;
+        color: white;
+        mix-blend-mode: difference;
       }
     </style>
   </head>
   <body>
-    <h1>Game Board</h1>
 
     <canvas id="game"></canvas>
+    
+    <div id="sidebar">
+      <div id="turn-actions">
+        <button disabled="disabled">Roll</button>
+        <button id="end-turn-button">End Turn</button>
+      </div>
+      <div id="players"></div>
+    </div>
     
     <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"

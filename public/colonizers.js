@@ -55,6 +55,45 @@
         drawBoard();
     });
 
+    var buildPlayerInfoBox = function(color) {
+        var playerDiv = $(document.createElement("div"));
+        playerDiv.className = "player-info";
+        playerDiv.css("background-color", color);
+
+        var list = document.createElement("ul");
+        list.className = "resources";
+
+        var woodCounter = $("<li/>").text("wood: 0").appendTo(list);
+        var woolCounter = $("<li/>").text("wool: 0").appendTo(list);
+        var clayCounter = $("<li/>").text("clay: 0").appendTo(list);
+        var wheatCounter = $("<li/>").text("wheat: 0").appendTo(list);
+        var oreCounter = $("<li/>").text("ore: 0").appendTo(list);
+
+        playerDiv.append(list);
+
+        $('#players').append(playerDiv);
+    };
+
+    var buildOpponentInfoBox = function(color) {
+        var playerDiv = $(document.createElement("div"));
+        playerDiv.className = "player-info";
+        playerDiv.css("background-color", color);
+
+        var list = document.createElement("ul");
+        list.className = "resources";
+
+        var victoryPoints = $("<li/>").text("victory points: 0").appendTo(list);
+
+        playerDiv.append(list);
+
+        $('#players').append(playerDiv);
+    };
+
+    buildPlayerInfoBox("red");
+    buildOpponentInfoBox("blue");
+    buildOpponentInfoBox("orange");
+    buildOpponentInfoBox("black");
+
     var getImage = function(resourceName) {
         switch (resourceName) {
             case "wheat": return fieldsImage;
@@ -74,103 +113,6 @@
         ctx.font = "24px Comic Sans MS";
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
-
-        var drawCircle = function(x, y, color) {
-            ctx.beginPath();
-            ctx.arc(x, y, 20, 0, 2 * Math.PI);
-            ctx.fillStyle = "white";
-            ctx.fill();
-            ctx.lineWidth = 2
-            ctx.strokeStyle = color;
-            ctx.closePath();
-            ctx.stroke();
-        }
-    
-        var drawSettlement = function(x, y, color) {
-            ctx.beginPath();
-            ctx.moveTo(x - 10, y - 2);
-            ctx.fillStyle = color;
-            ctx.lineTo(x - 10, y + 8);
-            ctx.lineTo(x + 10, y + 8);
-            ctx.lineTo(x + 10, y - 2);
-            ctx.lineTo(x, y - 12);
-            ctx.lineTo(x - 10, y - 2);
-            ctx.fill();
-            ctx.closePath();
-        }
-    
-        var drawStructure = function(x, y, color, isCity) {
-            drawCircle(x, y, color);
-    
-            if (isCity) {
-                drawCity(x, y, color);
-            } else {
-                drawSettlement(x, y, color);
-            }
-        };
-    
-        var drawCity = function(x, y, color) {
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(x - 10, y);
-            ctx.lineTo(x - 10, y + 10);
-            ctx.lineTo(x + 10, y + 10);
-            ctx.lineTo(x + 10, y - 7);
-            ctx.lineTo(x + 5, y - 12);
-            ctx.lineTo(x, y - 7);
-            ctx.lineTo(x, y - 10);
-            ctx.lineTo(x, y);
-            ctx.lineTo(x - 10, y);
-    
-            ctx.fill();
-            ctx.closePath();
-        }
-    
-        var drawRoad = function(x1, y1, x2, y2, color) {
-            ctx.lineWidth = 10
-            ctx.strokeStyle = color;
-            ctx.beginPath();
-            ctx.moveTo(x1, y1);
-            ctx.lineTo(x2, y2);
-            ctx.closePath();
-            ctx.stroke();
-        };
-
-        var getStrucutrePositionCoordinates = function(indexPosition, tileX, tileY) {
-            // 0 is 12 oclock
-            // 1 is 2 oclock
-            // 2 is 4 oclock
-            // 3 is 6 oclock
-            // 4 is 8 oclock
-            // 5 is 10 oclock
-    
-            switch (indexPosition) {
-                case 0: return [tileX + imageWidth/2, tileY + 5];
-                case 1: return [tileX + imageWidth, tileY + 42];
-                case 2: return [tileX + imageWidth, tileY + imageHeight - 42];
-                case 3: return [tileX + imageWidth/2, tileY + imageHeight - 5];
-                case 4: return [tileX + 5, tileY + imageHeight - 42];
-                case 5: return [tileX + 5, tileY + 42];
-            }
-        }
-    
-        var getRoadPositionCoordinates = function(indexPosition, tileX, tileY) {
-            // 0 is 12 oclock
-            // 1 is 2 oclock
-            // 2 is 4 oclock
-            // 3 is 6 oclock
-            // 4 is 8 oclock
-            // 5 is 10 oclock
-    
-            switch (indexPosition) {
-                case 0: return [tileX + imageWidth/2, tileY];
-                case 1: return [tileX + imageWidth, tileY + 42];
-                case 2: return [tileX + imageWidth, tileY + imageHeight - 42];
-                case 3: return [tileX + imageWidth/2, tileY + imageHeight];
-                case 4: return [tileX, tileY + imageHeight - 42];
-                case 5: return [tileX, tileY + 42];
-            }
-        }
     
         socket.on('game_state', function(gameState) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -344,5 +286,102 @@
                 }
             });
         });
+
+        var drawCircle = function(x, y, color) {
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = "white";
+            ctx.fill();
+            ctx.lineWidth = 2
+            ctx.strokeStyle = color;
+            ctx.closePath();
+            ctx.stroke();
+        };
+    
+        var drawSettlement = function(x, y, color) {
+            ctx.beginPath();
+            ctx.moveTo(x - 10, y - 2);
+            ctx.fillStyle = color;
+            ctx.lineTo(x - 10, y + 8);
+            ctx.lineTo(x + 10, y + 8);
+            ctx.lineTo(x + 10, y - 2);
+            ctx.lineTo(x, y - 12);
+            ctx.lineTo(x - 10, y - 2);
+            ctx.fill();
+            ctx.closePath();
+        };
+    
+        var drawStructure = function(x, y, color, isCity) {
+            drawCircle(x, y, color);
+    
+            if (isCity) {
+                drawCity(x, y, color);
+            } else {
+                drawSettlement(x, y, color);
+            }
+        };
+    
+        var drawCity = function(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x - 10, y);
+            ctx.lineTo(x - 10, y + 10);
+            ctx.lineTo(x + 10, y + 10);
+            ctx.lineTo(x + 10, y - 7);
+            ctx.lineTo(x + 5, y - 12);
+            ctx.lineTo(x, y - 7);
+            ctx.lineTo(x, y - 10);
+            ctx.lineTo(x, y);
+            ctx.lineTo(x - 10, y);
+    
+            ctx.fill();
+            ctx.closePath();
+        };
+    
+        var drawRoad = function(x1, y1, x2, y2, color) {
+            ctx.lineWidth = 10
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.closePath();
+            ctx.stroke();
+        };
+
+        var getStrucutrePositionCoordinates = function(indexPosition, tileX, tileY) {
+            // 0 is 12 oclock
+            // 1 is 2 oclock
+            // 2 is 4 oclock
+            // 3 is 6 oclock
+            // 4 is 8 oclock
+            // 5 is 10 oclock
+    
+            switch (indexPosition) {
+                case 0: return [tileX + imageWidth/2, tileY + 5];
+                case 1: return [tileX + imageWidth, tileY + 42];
+                case 2: return [tileX + imageWidth, tileY + imageHeight - 42];
+                case 3: return [tileX + imageWidth/2, tileY + imageHeight - 5];
+                case 4: return [tileX + 5, tileY + imageHeight - 42];
+                case 5: return [tileX + 5, tileY + 42];
+            }
+        };
+    
+        var getRoadPositionCoordinates = function(indexPosition, tileX, tileY) {
+            // 0 is 12 oclock
+            // 1 is 2 oclock
+            // 2 is 4 oclock
+            // 3 is 6 oclock
+            // 4 is 8 oclock
+            // 5 is 10 oclock
+    
+            switch (indexPosition) {
+                case 0: return [tileX + imageWidth/2, tileY];
+                case 1: return [tileX + imageWidth, tileY + 42];
+                case 2: return [tileX + imageWidth, tileY + imageHeight - 42];
+                case 3: return [tileX + imageWidth/2, tileY + imageHeight];
+                case 4: return [tileX, tileY + imageHeight - 42];
+                case 5: return [tileX, tileY + 42];
+            }
+        };
     }
 })();
