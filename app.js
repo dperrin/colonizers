@@ -91,7 +91,24 @@ function doDiceRoll(game) {
             }
         }
     }
-    console.log(gamePlayers);
+  }
+};
+
+function endTurn(game) {
+  game.roll = 0;
+  switch (game.turn) {
+      case "red":
+          game.turn = "blue";
+          break;
+      case "blue":
+          game.turn = "orange";
+          break;
+      case "orange":
+          game.turn = "black";
+          break;
+      case "black":
+          game.turn = "red";
+          break;
   }
 };
 
@@ -188,8 +205,7 @@ io.on('connection', function(socket) {
   socket.on('roll', function() {
     console.log('roll');
     doDiceRoll(game);
-    // TODO update gamestate
-    io.sockets.emit('game_state', games[gameId]);
+    io.sockets.emit('game_state', game);
     for(var i = 0; i < 4; i++){
         if(gamePlayers[i].socketId) {
             getSocket(gamePlayers[i].socketId).emit('player_state', gamePlayers[i]);
@@ -207,8 +223,8 @@ io.on('connection', function(socket) {
 
   socket.on('end_turn', function() {
     console.log('end_turn');
-    // TODO update gamestate
-    io.sockets.emit('game_state', games[gameId]);
+    endTurn(game);
+    io.sockets.emit('game_state', game);
   });
 });
 
