@@ -140,7 +140,7 @@
         var list = document.createElement("ul");
         list.className = "resources";
 
-        var victoryPoints = $("<li/>").text("victory points: 0").appendTo(list);
+        var victoryPoints = $("<li/>").text(color).appendTo(list);
 
         playerDiv.append(list);
 
@@ -159,7 +159,12 @@
     }
 
     var updateRollDisplay = function(rollValue) {
-        $("#roll").text(roll);
+        if (rollValue === 0) {
+            $("#roll").text('');
+        } else {
+            $("#roll").text(roll);
+        }
+        
     }
 
     socket.on('player_state', function(playerState) {
@@ -194,9 +199,7 @@
 
             whoseTurn = gameState.turn;
             roll = gameState.roll;
-            if (roll) {
-                updateRollDisplay(roll);
-            }
+            updateRollDisplay(roll);
 
             updateTurnIndicator();
             updateButtonStates();
