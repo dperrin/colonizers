@@ -4,6 +4,14 @@
         query: { gameId: gameId }
     });
 
+    $('#roll-button').click(function() {
+        socket.emit('roll');
+    });
+
+    $('#end-turn-button').click(function() {
+        socket.emit('end_turn');
+    });
+
     var imageWidth = 138;
     var imageHeight = 160;
 

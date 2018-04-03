@@ -132,6 +132,18 @@ io.on('connection', function(socket) {
   socket.on('disconnect', function() {
     console.log('user: ' + socketId + ' disconnected from game: ' + gameId);
   });
+
+  socket.on('roll', function() {
+    console.log('roll');
+    // TODO update gamestate
+    io.sockets.emite('game_state', games[gameId]);
+  });
+
+  socket.on('end_turn', function() {
+    console.log('end_turn');
+    // TODO update gamestate
+    io.sockets.emit('game_state', games[gameId]);
+  });
 });
 
 function getSocket(socketId) {
