@@ -55,6 +55,7 @@ function rollDice() {
 
 function doDiceRoll(game) {
   var roll = rollDice();
+  game.roll = roll;
   var gamePlayers = players[game.gameId];
   console.log(roll + " was rolled");
   if(roll === 7) {
@@ -90,6 +91,7 @@ function doDiceRoll(game) {
             }
         }
     }
+    console.log(gamePlayers);
   }
 };
 
@@ -145,7 +147,8 @@ app.post('/create', function(req, res) {
       {start: [6,0], end: [6,1], color: "red"}, {start: [8.0], end: [8,1], color: "orange"}, {start: [3,-1], end: [3,0], color: "blue"},
       {start: [6,-1], end: [7,-1], color: "black"}, {start: [5,-2], end: [6,-2], color: "blue"}],
     turn: "red",
-    nextPlayerColor: "red"
+    nextPlayerColor: "red",
+    roll: 0
   };
   players[gameId] = createStarterPlayers();
   // startTurn(games[gameId]);
@@ -184,9 +187,14 @@ io.on('connection', function(socket) {
 
   socket.on('roll', function() {
     console.log('roll');
-    doDiceRoll()
+    doDiceRoll(game);
     // TODO update gamestate
-    io.sockets.emite('game_state', games[gameId]);
+    io.sockets.emit('game_state', games[gameId]);
+    for(var i = 0; i < 4; i++){
+        if(gamePlayers[i].socketId) {
+            getSocket(gamePlayers[i].socketId).emit('player_state', gamePlayers[i]);
+        }
+    }
   });
 
   socket.on('get_game_state', function() {
