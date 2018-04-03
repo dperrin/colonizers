@@ -139,6 +139,10 @@ io.on('connection', function(socket) {
     io.sockets.emite('game_state', games[gameId]);
   });
 
+  socket.on('get_game_state', function() {
+    getSocket(socketId).emit('game_state', games[gameId]);
+  });
+
   socket.on('end_turn', function() {
     console.log('end_turn');
     // TODO update gamestate

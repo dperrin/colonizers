@@ -16,51 +16,53 @@
     var imageHeight = 160;
 
     var hillsDeferred = $.Deferred();
+    var forestDeferred = $.Deferred();
+    var mountainsDeferred = $.Deferred();
+    var fieldsDeferred = $.Deferred();
+    var pastureDeferred = $.Deferred();
+    var desertDeferred = $.Deferred();
+
+    var loaders = [hillsDeferred, forestDeferred, mountainsDeferred, fieldsDeferred, pastureDeferred, desertDeferred];
+
     var hillsImage = new Image();
     hillsImage.onload = function() {
         hillsDeferred.resolve();
     };
     hillsImage.src = "resources/hex-hills.png";
 
-    var forestDeferred = $.Deferred();
     var forestImage = new Image();
     forestImage.onload = function() {
         forestDeferred.resolve();
     };
     forestImage.src = "resources/hex-forest.png";
 
-    var mountainsDeferred = $.Deferred();
     var mountainsImage = new Image();
     mountainsImage.onload = function() {
         mountainsDeferred.resolve();
     };
     mountainsImage.src = "resources/hex-mountains.png";
 
-    var fieldsDeferred = $.Deferred();
     var fieldsImage = new Image();
     fieldsImage.onload = function() {
         fieldsDeferred.resolve();
     };
     fieldsImage.src = "resources/hex-fields.png";
 
-    var pastureDeferred = $.Deferred();
     var pastureImage = new Image();
     pastureImage.onload = function() {
         pastureDeferred.resolve();
     };
     pastureImage.src = "resources/hex-pasture.png";
 
-    var desertDeferred = $.Deferred();
     var desertImage = new Image();
     desertImage.onload = function() {
         desertDeferred.resolve();
     };
     desertImage.src = "resources/hex-desert.png";
 
-    var loaders = [hillsDeferred, forestDeferred, mountainsDeferred, fieldsDeferred, pastureDeferred, desertDeferred];
-
     $.when.apply(null, loaders).done(function() {
         drawBoard();
+        socket.emit('get_game_state');
     });
 
     var buildPlayerInfoBox = function(color) {
