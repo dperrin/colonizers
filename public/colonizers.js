@@ -1,4 +1,7 @@
 (function() {
+    var playerStateLoaded = false;
+    var whoseTurn = null;
+
     var gameId = window.location.href.split('/').pop();
     var socket = io({
         query: { gameId: gameId }
@@ -66,8 +69,19 @@
         socket.emit('get_player_state');
     });
 
+    var updateTurnIndicator = function() {
+        if (whoseTurn && playerStateLoaded) {
+            $(".turn-indicator-red").hide();
+            $(".turn-indicator-blue").hide();
+            $(".turn-indicator-orange").hide();
+            $(".turn-indicator-black").hide();
+            $(".turn-indicator-" + whoseTurn).show();
+        }
+    }
+
     var buildPlayerInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
+        $("<span/>").addClass("turn-indicator-" + color).text("->").appendTo(playerDiv).hide();
         playerDiv.addClass("player-info");
         playerDiv.css("background-color", color);
 
@@ -95,7 +109,8 @@
 
     var buildOpponentInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
-        playerDiv.className = "opponent-info";
+        $("<span/>").addClass("turn-indicator-" + color).text("->").appendTo(playerDiv).hide();
+        playerDiv.addClass("opponent-info");
         playerDiv.css("background-color", color);
 
         var list = document.createElement("ul");
@@ -107,11 +122,6 @@
 
         $('#players').append(playerDiv);
     };
-
-    buildPlayerInfoBox("red");
-    buildOpponentInfoBox("blue");
-    buildOpponentInfoBox("orange");
-    buildOpponentInfoBox("black");
 
     var getImage = function(resourceName) {
         switch (resourceName) {
@@ -125,8 +135,19 @@
     }
 
     socket.on('player_state', function(playerState) {
+        var myColor = playerState.color;
+
+        if (!playerStateLoaded) {
+            "red" === myColor ? buildPlayerInfoBox("red") : buildOpponentInfoBox("red");
+            "blue" === myColor ? buildPlayerInfoBox("blue") : buildOpponentInfoBox("blue");
+            "orange" === myColor ? buildPlayerInfoBox("orange") : buildOpponentInfoBox("orange");
+            "black" === myColor ? buildPlayerInfoBox("black") : buildOpponentInfoBox("black");
+            playerStateLoaded = true;
+        }
+
         console.log(playerState);
         updatePlayerInfoBox(playerState);
+        updateTurnIndicator();
     });
 
     var drawBoard = function() {
@@ -141,6 +162,9 @@
         socket.on('game_state', function(gameState) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             console.log(gameState);
+
+            whoseTurn = gameState.turn;
+            updateTurnIndicator();
     
             var getHexAttribute = function(position, attribute, falseyValue) {
                 return gameState.board.find(function(element) {
