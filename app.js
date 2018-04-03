@@ -38,11 +38,20 @@ function createStarterBoard() {
   ];
 }
 
+function createStarterPlayers() {
+  return [
+      { socketId: null, color: "red", wood: 1, wool: 1, clay: 1, wheat: 1, ore: 0},
+      { socketId: null, color: "blue", wood: 1, wool: 1, clay: 1, wheat: 1, ore: 1},
+      { socketId: null, color: "orange", wood: 2, wool: 0, clay: 2, wheat: 0, ore: 1},
+      { socketId: null, color: "black", wood: 0, wool: 2, clay: 1, wheat: 2, ore: 1}
+  ]
+};
+
 function rollDice() {
   var die1 = Math.floor(Math.random() * (6)) + 1;
   var die2 = Math.floor(Math.random() * (6)) + 1;
   return die1 + die2
-}
+};
 
 function startTurn(game) {
   var roll = rollDice();
@@ -62,32 +71,32 @@ function startTurn(game) {
         }
     }
   }
-}
+};
 
 function validRoad(start, end, game) {
 
   return true;
-}
+};
 
 function hasRoad(start, end, game) {
 
-}
+};
 
 function validTownLocation(index, game) {
 
-}
+};
 
 function getTown(index, game) {
     return game.towns.find(town => JSON.stringify(town.position) === JSON.stringify(index));
-}
+};
 
 function validCityLocation(index, game) {
 
-}
+};
 
 function hasCity(index, game) {
 
-}
+};
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
@@ -114,8 +123,11 @@ app.post('/create', function(req, res) {
       {position: [7,-1], color: "black"}, {position: [6,-2], color: "blue"}],
     roads: [{start: [4,2], end: [3,2], color: "black"}, {start: [7,2], end: [8,2], color: "orange"}, {start: [5,1], end: [5,2], color: "red"},
       {start: [6,0], end: [6,1], color: "red"}, {start: [8.0], end: [8,1], color: "orange"}, {start: [3,-1], end: [3,0], color: "blue"},
-      {start: [6,-1], end: [7,-1], color: "black"}, {start: [5,-2], end: [6,-2], color: "blue"}]
+      {start: [6,-1], end: [7,-1], color: "black"}, {start: [5,-2], end: [6,-2], color: "blue"}],
+    turn: "red",
+    nextPlayerColor: "red"
   };
+  players[gameId] = createStarterPlayers();
   startTurn(games[gameId]);
   res.statusCode = 201;
   var location = req.protocol + '://' + req.get('host') + '/' + gameId;
@@ -126,14 +138,31 @@ app.post('/create', function(req, res) {
 io.on('connection', function(socket) {
   var socketId = socket.id;
   var gameId = socket.handshake.query.gameId;
-
+  var game = games[gameId];
+  var gamePlayers = players[gameId];
+  var playerColor = game.nextPlayerColor;
+  if (playerColor === "red") {
+      game.nextPlayerColor = "blue";
+  } else if (playerColor === "blue") {
+      game.nextPlayerColor = "orange";
+  } else if (playerColor === "orange") {
+      game.nextPlayerColor = "black";
+  }
+  var player = findPlayer(gamePlayers, playerColor);
+  player.socketId = socketId;
   console.log('user: ' + socketId + ' connected to game: ' + gameId);
-  getSocket(socketId).emit('game_state', games[gameId]);
+  getSocket(socketId).emit('game_state', game);
+  getSocket(socketId).emit('player_state', player);
 
   socket.on('disconnect', function() {
+    player.socketId = null;
     console.log('user: ' + socketId + ' disconnected from game: ' + gameId);
   });
 });
+
+function findPlayer(players, playerColor) {
+    return players.find(player => player.color === playerColor);
+};
 
 function getSocket(socketId) {
   return io.of('/').connected[socketId];
