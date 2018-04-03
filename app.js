@@ -11,6 +11,8 @@ app.use(express.static(__dirname + '/public'))
 
 var games = {};
 
+var players = {};
+
 function createStarterBoard() {
   return [
 
@@ -44,7 +46,7 @@ function rollDice() {
 
 function startTurn(game) {
   var roll = rollDice();
-  console.log(roll);
+  console.log(roll + " was rolled");
   if(roll === 7) {
     console.log("ROBBER!")
   } else {
@@ -54,7 +56,6 @@ function startTurn(game) {
         console.log(tiles[i]);
         for (var j = 0; j < 6; j++) {
             var town = getTown(tiles[i].indexes[j], game);
-            console.log(town);
             if(town != null) {
                 console.log(town.color + " gets " + tiles[i].resource);
             }
@@ -77,7 +78,7 @@ function validTownLocation(index, game) {
 }
 
 function getTown(index, game) {
-    return game.towns.find(town => town.position === index);
+    return game.towns.find(town => JSON.stringify(town.position) === JSON.stringify(index));
 }
 
 function validCityLocation(index, game) {
