@@ -9,7 +9,7 @@
       }
 
       #sidebar {
-        margin-left: 25px;
+        margin-left: 35px;
         float: left;
       }
 
@@ -38,6 +38,15 @@
         color: white;
         mix-blend-mode: difference;
       }
+
+      .player-info, .opponent-info {
+        position: relative;
+      }
+
+      .turn-indicator-red, .turn-indicator-blue, .turn-indicator-orange, .turn-indicator-black {
+        position: absolute;
+        left: -17px;
+      }
     </style>
   </head>
   <body>
@@ -46,7 +55,7 @@
     
     <div id="sidebar">
       <div id="turn-actions">
-        <button id="roll-button" disabled="disabled">Roll</button>
+        <button id="roll-button">Roll</button>
         <button id="end-turn-button">End Turn</button>
       </div>
       <div id="players"></div>

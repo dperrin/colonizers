@@ -1,4 +1,7 @@
 (function() {
+    var playerStateLoaded = false;
+    var whoseTurn = null;
+
     var gameId = window.location.href.split('/').pop();
     var socket = io({
         query: { gameId: gameId }
@@ -63,30 +66,51 @@
     $.when.apply(null, loaders).done(function() {
         drawBoard();
         socket.emit('get_game_state');
+        socket.emit('get_player_state');
     });
+
+    var updateTurnIndicator = function() {
+        if (whoseTurn && playerStateLoaded) {
+            $(".turn-indicator-red").hide();
+            $(".turn-indicator-blue").hide();
+            $(".turn-indicator-orange").hide();
+            $(".turn-indicator-black").hide();
+            $(".turn-indicator-" + whoseTurn).show();
+        }
+    }
 
     var buildPlayerInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
-        playerDiv.className = "player-info";
+        $("<span/>").addClass("turn-indicator-" + color).text("->").appendTo(playerDiv).hide();
+        playerDiv.addClass("player-info");
         playerDiv.css("background-color", color);
 
         var list = document.createElement("ul");
         list.className = "resources";
 
-        var woodCounter = $("<li/>").text("wood: 0").appendTo(list);
-        var woolCounter = $("<li/>").text("wool: 0").appendTo(list);
-        var clayCounter = $("<li/>").text("clay: 0").appendTo(list);
-        var wheatCounter = $("<li/>").text("wheat: 0").appendTo(list);
-        var oreCounter = $("<li/>").text("ore: 0").appendTo(list);
+        var woodCounter = $("<li/>").addClass("wood-counter").text("wood: 0").appendTo(list);
+        var woolCounter = $("<li/>").addClass("wool-counter").text("wool: 0").appendTo(list);
+        var clayCounter = $("<li/>").addClass("clay-counter").text("clay: 0").appendTo(list);
+        var wheatCounter = $("<li/>").addClass("wheat-counter").text("wheat: 0").appendTo(list);
+        var oreCounter = $("<li/>").addClass("ore-counter").text("ore: 0").appendTo(list);
 
         playerDiv.append(list);
 
         $('#players').append(playerDiv);
     };
 
+    var updatePlayerInfoBox = function(playerState) {
+        $(".player-info .wood-counter").text("wood: " + playerState.wood);
+        $(".player-info .wool-counter").text("wool: " + playerState.wool);
+        $(".player-info .clay-counter").text("clay: " + playerState.clay);
+        $(".player-info .wheat-counter").text("wheat: " + playerState.wheat);
+        $(".player-info .ore-counter").text("ore: " + playerState.ore);
+    }
+
     var buildOpponentInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
-        playerDiv.className = "player-info";
+        $("<span/>").addClass("turn-indicator-" + color).text("->").appendTo(playerDiv).hide();
+        playerDiv.addClass("opponent-info");
         playerDiv.css("background-color", color);
 
         var list = document.createElement("ul");
@@ -99,11 +123,6 @@
         $('#players').append(playerDiv);
     };
 
-    buildPlayerInfoBox("red");
-    buildOpponentInfoBox("blue");
-    buildOpponentInfoBox("orange");
-    buildOpponentInfoBox("black");
-
     var getImage = function(resourceName) {
         switch (resourceName) {
             case "wheat": return fieldsImage;
@@ -114,6 +133,22 @@
             default: return desertImage;
         }
     }
+
+    socket.on('player_state', function(playerState) {
+        var myColor = playerState.color;
+
+        if (!playerStateLoaded) {
+            "red" === myColor ? buildPlayerInfoBox("red") : buildOpponentInfoBox("red");
+            "blue" === myColor ? buildPlayerInfoBox("blue") : buildOpponentInfoBox("blue");
+            "orange" === myColor ? buildPlayerInfoBox("orange") : buildOpponentInfoBox("orange");
+            "black" === myColor ? buildPlayerInfoBox("black") : buildOpponentInfoBox("black");
+            playerStateLoaded = true;
+        }
+
+        console.log(playerState);
+        updatePlayerInfoBox(playerState);
+        updateTurnIndicator();
+    });
 
     var drawBoard = function() {
         var canvas = document.getElementById("game");
@@ -127,6 +162,9 @@
         socket.on('game_state', function(gameState) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             console.log(gameState);
+
+            whoseTurn = gameState.turn;
+            updateTurnIndicator();
     
             var getHexAttribute = function(position, attribute, falseyValue) {
                 return gameState.board.find(function(element) {
