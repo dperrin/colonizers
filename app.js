@@ -44,7 +44,23 @@ function rollDice() {
 
 function startTurn(game) {
   var roll = rollDice();
-
+  console.log(roll);
+  if(roll === 7) {
+    console.log("ROBBER!")
+  } else {
+    var tiles = game.board.filter(tile => tile.number === roll);
+    var numTiles = tiles.length;
+    for (var i = 0; i < numTiles; i++) {
+        console.log(tiles[i]);
+        for (var j = 0; j < 6; j++) {
+            var town = getTown(tiles[i].indexes[j], game);
+            console.log(town);
+            if(town != null) {
+                console.log(town.color + " gets " + tiles[i].resource);
+            }
+        }
+    }
+  }
 }
 
 function validRoad(start, end, game) {
@@ -60,8 +76,8 @@ function validTownLocation(index, game) {
 
 }
 
-function hasTown(index, game) {
-
+function getTown(index, game) {
+    return game.towns.find(town => town.position === index);
 }
 
 function validCityLocation(index, game) {
@@ -99,7 +115,7 @@ app.post('/create', function(req, res) {
       {start: [6,0], end: [6,1], color: "red"}, {start: [8.0], end: [8,1], color: "red"}, {start: [3,-1], end: [3,0], color: "blue"},
       {start: [6,-1], end: [7,-1], color: "white"}, {start: [5,-2], end: [6,-2], color: "blue"}]
   };
-  
+  startTurn(games[gameId]);
   res.statusCode = 201;
   var location = req.protocol + '://' + req.get('host') + '/' + gameId;
   res.setHeader('Location', location);
