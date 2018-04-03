@@ -128,7 +128,7 @@ app.post('/create', function(req, res) {
     nextPlayerColor: "red"
   };
   players[gameId] = createStarterPlayers();
-  startTurn(games[gameId]);
+  // startTurn(games[gameId]);
   res.statusCode = 201;
   var location = req.protocol + '://' + req.get('host') + '/' + gameId;
   res.setHeader('Location', location);
@@ -139,6 +139,11 @@ io.on('connection', function(socket) {
   var socketId = socket.id;
   var gameId = socket.handshake.query.gameId;
   var game = games[gameId];
+
+  if (!game) {
+    return;
+  }
+
   var gamePlayers = players[gameId];
   var playerColor = game.nextPlayerColor;
   if (playerColor === "red") {
@@ -165,6 +170,10 @@ io.on('connection', function(socket) {
 
   socket.on('get_game_state', function() {
     getSocket(socketId).emit('game_state', games[gameId]);
+  });
+
+  socket.on('get_player_state', function() {
+    getSocket(socketId).emit('player_state', players[gameId].find(function(player) { return player.socketId === socketId }));
   });
 
   socket.on('end_turn', function() {

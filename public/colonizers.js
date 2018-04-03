@@ -63,30 +63,39 @@
     $.when.apply(null, loaders).done(function() {
         drawBoard();
         socket.emit('get_game_state');
+        socket.emit('get_player_state');
     });
 
     var buildPlayerInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
-        playerDiv.className = "player-info";
+        playerDiv.addClass("player-info");
         playerDiv.css("background-color", color);
 
         var list = document.createElement("ul");
         list.className = "resources";
 
-        var woodCounter = $("<li/>").text("wood: 0").appendTo(list);
-        var woolCounter = $("<li/>").text("wool: 0").appendTo(list);
-        var clayCounter = $("<li/>").text("clay: 0").appendTo(list);
-        var wheatCounter = $("<li/>").text("wheat: 0").appendTo(list);
-        var oreCounter = $("<li/>").text("ore: 0").appendTo(list);
+        var woodCounter = $("<li/>").addClass("wood-counter").text("wood: 0").appendTo(list);
+        var woolCounter = $("<li/>").addClass("wool-counter").text("wool: 0").appendTo(list);
+        var clayCounter = $("<li/>").addClass("clay-counter").text("clay: 0").appendTo(list);
+        var wheatCounter = $("<li/>").addClass("wheat-counter").text("wheat: 0").appendTo(list);
+        var oreCounter = $("<li/>").addClass("ore-counter").text("ore: 0").appendTo(list);
 
         playerDiv.append(list);
 
         $('#players').append(playerDiv);
     };
 
+    var updatePlayerInfoBox = function(playerState) {
+        $(".player-info .wood-counter").text("wood: " + playerState.wood);
+        $(".player-info .wool-counter").text("wool: " + playerState.wool);
+        $(".player-info .clay-counter").text("clay: " + playerState.clay);
+        $(".player-info .wheat-counter").text("wheat: " + playerState.wheat);
+        $(".player-info .ore-counter").text("ore: " + playerState.ore);
+    }
+
     var buildOpponentInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
-        playerDiv.className = "player-info";
+        playerDiv.className = "opponent-info";
         playerDiv.css("background-color", color);
 
         var list = document.createElement("ul");
@@ -114,6 +123,11 @@
             default: return desertImage;
         }
     }
+
+    socket.on('player_state', function(playerState) {
+        console.log(playerState);
+        updatePlayerInfoBox(playerState);
+    });
 
     var drawBoard = function() {
         var canvas = document.getElementById("game");
