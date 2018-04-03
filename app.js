@@ -127,8 +127,7 @@ io.on('connection', function(socket) {
   var gameId = socket.handshake.query.gameId;
 
   console.log('user: ' + socketId + ' connected to game: ' + gameId);
-  getSocket(socketId).emit('game_state', games[gameId]);
-
+  
   socket.on('disconnect', function() {
     console.log('user: ' + socketId + ' disconnected from game: ' + gameId);
   });
