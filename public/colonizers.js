@@ -1,6 +1,8 @@
 (function() {
     var playerStateLoaded = false;
     var whoseTurn = null;
+    var myColor = null;
+    var roll = 0;
 
     var gameId = window.location.href.split('/').pop();
     var socket = io({
@@ -79,6 +81,28 @@
         }
     }
 
+    var updateButtonStates = function() {
+        // it is not my turn
+        if (whoseTurn !== myColor) {
+            $('#roll-button').prop("disabled", true);
+            $('#end-turn-button').prop("disabled", true);
+            return;
+        } 
+        
+        // it is my turn
+        if (roll) {
+            $('#roll-button').prop("disabled", true);
+            $('#end-turn-button').prop("disabled", false);
+            return;
+        }
+
+        if (!roll) {
+            $('#roll-button').prop("disabled", false);
+            $('#end-turn-button').prop("disabled", true);
+            return;
+        }
+    }
+
     var buildPlayerInfoBox = function(color) {
         var playerDiv = $(document.createElement("div"));
         $("<span/>").addClass("turn-indicator-" + color).text("->").appendTo(playerDiv).hide();
@@ -134,8 +158,12 @@
         }
     }
 
+    var updateRollDisplay = function(rollValue) {
+        $("#roll").text(roll);
+    }
+
     socket.on('player_state', function(playerState) {
-        var myColor = playerState.color;
+        myColor = playerState.color;
 
         if (!playerStateLoaded) {
             "red" === myColor ? buildPlayerInfoBox("red") : buildOpponentInfoBox("red");
@@ -148,6 +176,7 @@
         console.log(playerState);
         updatePlayerInfoBox(playerState);
         updateTurnIndicator();
+        updateButtonStates();
     });
 
     var drawBoard = function() {
@@ -164,7 +193,13 @@
             console.log(gameState);
 
             whoseTurn = gameState.turn;
+            roll = gameState.roll;
+            if (roll) {
+                updateRollDisplay(roll);
+            }
+
             updateTurnIndicator();
+            updateButtonStates();
     
             var getHexAttribute = function(position, attribute, falseyValue) {
                 return gameState.board.find(function(element) {
