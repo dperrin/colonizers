@@ -108,12 +108,12 @@ app.post('/create', function(req, res) {
   games[gameId] = {
     gameId: gameId,
     board: createStarterBoard(),
-    towns: [{position: [3,2], color: "white"}, {position: [8,2], color: "orange"}, {position: [5,1], color: "red"},
+    towns: [{position: [3,2], color: "black"}, {position: [8,2], color: "orange"}, {position: [5,1], color: "red"},
       {position: [8,1], color: "orange"}, {position: [6,0], color: "red"}, {position: [3,-1], color: "blue"},
-      {position: [7,-1], color: "white"}, {position: [6,-2], color: "blue"}],
-    roads: [{start: [3,2], end: [4,2], color: "white"}, {start: [7,2], end: [8,2], color: "orange"}, {start: [5,1], end: [5,2], color: "red"},
-      {start: [6,0], end: [6,1], color: "red"}, {start: [8.0], end: [8,1], color: "red"}, {start: [3,-1], end: [3,0], color: "blue"},
-      {start: [6,-1], end: [7,-1], color: "white"}, {start: [5,-2], end: [6,-2], color: "blue"}]
+      {position: [7,-1], color: "black"}, {position: [6,-2], color: "blue"}],
+    roads: [{start: [4,2], end: [3,2], color: "black"}, {start: [7,2], end: [8,2], color: "orange"}, {start: [5,1], end: [5,2], color: "red"},
+      {start: [6,0], end: [6,1], color: "red"}, {start: [8.0], end: [8,1], color: "orange"}, {start: [3,-1], end: [3,0], color: "blue"},
+      {start: [6,-1], end: [7,-1], color: "black"}, {start: [5,-2], end: [6,-2], color: "blue"}]
   };
   startTurn(games[gameId]);
   res.statusCode = 201;
