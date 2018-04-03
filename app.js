@@ -151,12 +151,26 @@ io.on('connection', function(socket) {
   var player = findPlayer(gamePlayers, playerColor);
   player.socketId = socketId;
   console.log('user: ' + socketId + ' connected to game: ' + gameId);
-  getSocket(socketId).emit('game_state', game);
-  getSocket(socketId).emit('player_state', player);
 
   socket.on('disconnect', function() {
     player.socketId = null;
     console.log('user: ' + socketId + ' disconnected from game: ' + gameId);
+  });
+
+  socket.on('roll', function() {
+    console.log('roll');
+    // TODO update gamestate
+    io.sockets.emite('game_state', games[gameId]);
+  });
+
+  socket.on('get_game_state', function() {
+    getSocket(socketId).emit('game_state', games[gameId]);
+  });
+
+  socket.on('end_turn', function() {
+    console.log('end_turn');
+    // TODO update gamestate
+    io.sockets.emit('game_state', games[gameId]);
   });
 });
 
